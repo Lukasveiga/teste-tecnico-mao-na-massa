@@ -11,7 +11,7 @@ public class RequestBodyToEntityConverter implements Converter<PersonRequestBody
     public Person convert(PersonRequestBody source) {
         var person = new Person();
         person.setFullName(source.fullName());
-        source.addresses().forEach(person::addAddresses);
+        person.setDateOfBirth(source.dateOfBirth());
         return person;
     }
 }

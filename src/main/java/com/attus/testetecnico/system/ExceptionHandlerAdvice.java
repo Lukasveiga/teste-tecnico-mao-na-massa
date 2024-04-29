@@ -1,5 +1,8 @@
 package com.attus.testetecnico.system;
 
+import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +20,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<HttpResponseResult> httpMessageNotReadableException(HttpMessageNotReadableException ex) {
         var message = ex.getMessage();
@@ -27,7 +32,7 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new HttpResponseResult(
                         false,
-                        "Provided arguments are invalid, see data for details.",
+                        "Provided arguments are invalid, see data for details",
                         LocalDateTime.now(),
                         message
                 )
@@ -49,15 +54,28 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new HttpResponseResult(
                         false,
-                        "Provided arguments are invalid, see data for details.",
+                        "Provided arguments are invalid, see data for details",
                         LocalDateTime.now(),
                         map
                 )
         );
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    ResponseEntity<HttpResponseResult> handleEntityNotFoundException(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new HttpResponseResult(
+                        false,
+                        ex.getMessage(),
+                        LocalDateTime.now(),
+                        null
+                )
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     ResponseEntity<HttpResponseResult> handleOthersExceptions(Exception ex) {
+        LOGGER.warn(ex.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new HttpResponseResult(
                         false,
