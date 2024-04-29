@@ -345,4 +345,46 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    void testFindAllPersonsSuccess() throws Exception {
+        // Given
+        when(this.personService.findAll())
+                .thenReturn(List.of(personTest));
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.message").value("Find all persons success"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data.length()").value(1))
+                .andExpect(jsonPath("$.data[0].id").value(personTest.getId()))
+                .andExpect(jsonPath("$.data[0].fullName").value(personTest.getFullName()))
+                .andExpect(jsonPath("$.data[0].dateOfBirth").value(personTest.getDateOfBirth().format(formatter)))
+                .andExpect(jsonPath("$.data[0].mainAddress").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void testFindAllPersonsPageableSuccess() throws Exception {
+        // Given
+        var page = 0;
+
+        when(this.personService.findAllPageable(page))
+                .thenReturn(List.of(personTest));
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl + "?page=" + page).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.message").value("Find all persons success"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data.length()").value(1))
+                .andExpect(jsonPath("$.data[0].id").value(personTest.getId()))
+                .andExpect(jsonPath("$.data[0].fullName").value(personTest.getFullName()))
+                .andExpect(jsonPath("$.data[0].dateOfBirth").value(personTest.getDateOfBirth().format(formatter)))
+                .andExpect(jsonPath("$.data[0].mainAddress").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }

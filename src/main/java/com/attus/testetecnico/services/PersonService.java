@@ -4,7 +4,11 @@ import com.attus.testetecnico.entities.Person;
 import com.attus.testetecnico.repositories.PersonRepository;
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -32,5 +36,16 @@ public class PersonService {
         oldPerson.setFullName(newPerson.getFullName());
         oldPerson.setDateOfBirth(newPerson.getDateOfBirth());
         return this.personRepository.save(oldPerson);
+    }
+
+    public List<Person> findAll() {
+        return this.personRepository.findAll();
+    }
+
+    public List<Person> findAllPageable(int page) {
+        var size = 5;
+        var pageable = PageRequest.of(page, size);
+        Page<Person> pagePerson = this.personRepository.findAll(pageable);
+        return pagePerson.getContent();
     }
 }

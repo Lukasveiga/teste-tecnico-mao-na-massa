@@ -60,6 +60,24 @@ public class PersonController {
         );
     }
 
+    @GetMapping
+    public ResponseEntity<HttpResponseResult> findAllPersons(@RequestParam(name = "page", required = false) Integer page) {
+        var personList = this.personService.findAll();
+
+        if(page != null) {
+            personList = this.personService.findAllPageable(page);
+        }
+
+        var responsePerson = personList.stream().map(this.entityToResponseBodyConverter::convert).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new HttpResponseResult(
+                true,
+                "Find all persons success",
+                LocalDateTime.now(),
+                responsePerson
+        ));
+    }
+
     @GetMapping("/{personId}")
     public ResponseEntity<HttpResponseResult> findOnePerson(@PathVariable("personId") Long personId) {
         var person = this.personService.findOne(personId);
