@@ -1,13 +1,16 @@
 package com.attus.testetecnico.controllers.person.dto;
 
-import com.attus.testetecnico.entities.Address;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public record PersonRequestBody(
+        @NotBlank(message = "Cannot be null or empty")
         String fullName,
-        LocalDate dateOfBirth,
-        List<Address> addresses
+        @JsonFormat(pattern = "dd/MM/yyyy")
+                @NotNull(message = "Cannot be null or empty")
+        LocalDate dateOfBirth
 ) {
 }

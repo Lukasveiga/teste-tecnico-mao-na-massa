@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -22,7 +23,7 @@ public class Person {
 
     private LocalDate dateOfBirth;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "person")
     @JsonManagedReference
     private final List<Address> addresses = new ArrayList<>();
 
@@ -30,7 +31,7 @@ public class Person {
         this.addresses.add(address);
     }
 
-    public Address getMainAddress() {
-        return this.addresses.stream().filter(Address::isMain).findFirst().orElseGet(Address::new);
+    public Optional<Address> getMainAddress() {
+        return this.addresses.stream().filter(Address::isMain).findFirst();
     }
 }
