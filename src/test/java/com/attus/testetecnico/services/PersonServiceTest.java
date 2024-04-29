@@ -86,4 +86,29 @@ class PersonServiceTest implements ServiceTestConfiguration {
                 .hasMessage("Person with id %d was not found".formatted(personTest.getId()));
         verify(this.personRepository, times(0)).save(any(Person.class));
     }
+
+    @Test
+    void testFindOnePersonSuccess() {
+        // Given
+        when(this.personRepository.findById(anyLong()))
+                .thenReturn(Optional.of(personTest));
+
+        // When
+        var result = this.personService.findOne(personTest.getId());
+
+        // Then
+        Assertions.assertThat(result).usingRecursiveAssertion().isEqualTo(personTest);
+    }
+
+    @Test
+    void testFindOneErrorEntityNotFoundException() {
+        // Given
+        when(this.personRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        // When - Then
+        Assertions.assertThatThrownBy(() -> this.personService.findOne(personTest.getId()))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("Person with id %d was not found".formatted(personTest.getId()));
+    }
 }

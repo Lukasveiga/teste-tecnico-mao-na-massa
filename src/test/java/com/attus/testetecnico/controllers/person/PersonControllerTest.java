@@ -21,12 +21,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.attus.testetecnico.utils.GenerateTestEntities.generateAddress;
 import static com.attus.testetecnico.utils.GenerateTestEntities.generatePerson;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -276,6 +276,72 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details"))
                 .andExpect(jsonPath("$.dateTime").isNotEmpty())
                 .andExpect(jsonPath("$.data").value("Invalid date format. Follow the following pattern: dd/MM/yyyy"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void testFindOnePersonSuccess() throws Exception {
+        // Given
+        when(this.personService.findOne(anyLong()))
+                .thenReturn(personTest);
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl + "/" + personTest.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.message").value("Find person success"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data.id").value(personTest.getId()))
+                .andExpect(jsonPath("$.data.fullName").value(personTest.getFullName()))
+                .andExpect(jsonPath("$.data.dateOfBirth").value(personTest.getDateOfBirth().format(formatter)))
+                .andExpect(jsonPath("$.data.mainAddress").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void testFindOnePersonShowingMainAddressIfExistsSuccess() throws Exception {
+        // Given
+        var address = generateAddress(1L, "Street 1", "5588-966",
+                "City 1", "State 1", true, personTest);
+
+        personTest.addAddresses(address);
+
+        when(this.personService.findOne(anyLong()))
+                .thenReturn(personTest);
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl + "/" + personTest.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.message").value("Find person success"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data.id").value(personTest.getId()))
+                .andExpect(jsonPath("$.data.fullName").value(personTest.getFullName()))
+                .andExpect(jsonPath("$.data.dateOfBirth").value(personTest.getDateOfBirth().format(formatter)))
+                .andExpect(jsonPath("$.data.mainAddress.id").value(address.getId()))
+                .andExpect(jsonPath("$.data.mainAddress.street").value(address.getStreet()))
+                .andExpect(jsonPath("$.data.mainAddress.zipCode").value(address.getZipCode()))
+                .andExpect(jsonPath("$.data.mainAddress.city").value(address.getCity()))
+                .andExpect(jsonPath("$.data.mainAddress.state").value(address.getState()))
+                .andExpect(jsonPath("$.data.mainAddress.main").value(address.isMain()))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void testFindOnePersonErrorPersonNotFoundException() throws Exception {
+        // Given
+        when(this.personService.findOne(anyLong()))
+                .thenThrow(new EntityNotFoundException("Person with id %d was not found".formatted(personTest.getId())));
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl + "/" + personTest.getId()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Person with id %d was not found".formatted(personTest.getId())))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print());
     }
 

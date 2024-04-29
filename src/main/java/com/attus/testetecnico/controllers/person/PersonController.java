@@ -59,4 +59,18 @@ public class PersonController {
                 )
         );
     }
+
+    @GetMapping("/{personId}")
+    public ResponseEntity<HttpResponseResult> findOnePerson(@PathVariable("personId") Long personId) {
+        var person = this.personService.findOne(personId);
+        var responsePerson = this.entityToResponseBodyConverter.convert(person);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new HttpResponseResult(
+                        true,
+                        "Find person success",
+                        LocalDateTime.now(),
+                        responsePerson
+                )
+        );
+    }
 }
