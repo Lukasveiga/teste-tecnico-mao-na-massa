@@ -10,7 +10,7 @@ public record AddressRequestBody(
         @NotBlank(message = "Cannot be null or empty")
         String zipCode,
 
-        @Min(value = 1, message = "Cannot be less tha 1")
+        @Min(value = 1, message = "Cannot be less than 1")
         int number,
 
         @NotBlank(message = "Cannot be null or empty")

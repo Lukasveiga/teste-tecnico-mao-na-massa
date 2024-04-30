@@ -387,4 +387,20 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    void testInternalServerError() throws Exception {
+        // Given
+        when(this.personService.findOne(anyLong()))
+                .thenThrow(new RuntimeException("Internal Server Error"));
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl + "/" + personTest.getId()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Internal Server Error"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }
