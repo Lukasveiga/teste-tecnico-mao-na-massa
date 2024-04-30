@@ -1,7 +1,7 @@
 package com.attus.testetecnico.controllers.person;
 
-import com.attus.testetecnico.controllers.person.converter.EntityToResponseBodyConverter;
-import com.attus.testetecnico.controllers.person.converter.RequestBodyToEntityConverter;
+import com.attus.testetecnico.controllers.person.converter.PersonEntityToResponseBodyConverter;
+import com.attus.testetecnico.controllers.person.converter.PersonRequestBodyToEntityConverter;
 import com.attus.testetecnico.controllers.person.dto.PersonRequestBody;
 import com.attus.testetecnico.services.PersonService;
 import com.attus.testetecnico.system.HttpResponseResult;
@@ -19,21 +19,21 @@ public class PersonController {
 
     private final PersonService personService;
 
-    private final RequestBodyToEntityConverter requestBodyToEntityConverter;
+    private final PersonRequestBodyToEntityConverter personRequestBodyToEntityConverter;
 
-    private final EntityToResponseBodyConverter entityToResponseBodyConverter;
+    private final PersonEntityToResponseBodyConverter personEntityToResponseBodyConverter;
 
-    public PersonController(PersonService personService, RequestBodyToEntityConverter requestBodyToEntityConverter,
-                            EntityToResponseBodyConverter entityToResponseBodyConverter) {
+    public PersonController(PersonService personService, PersonRequestBodyToEntityConverter personRequestBodyToEntityConverter,
+                            PersonEntityToResponseBodyConverter personEntityToResponseBodyConverter) {
         this.personService = personService;
-        this.requestBodyToEntityConverter = requestBodyToEntityConverter;
-        this.entityToResponseBodyConverter = entityToResponseBodyConverter;
+        this.personRequestBodyToEntityConverter = personRequestBodyToEntityConverter;
+        this.personEntityToResponseBodyConverter = personEntityToResponseBodyConverter;
     }
 
     @PostMapping
     public ResponseEntity<HttpResponseResult> createNewPerson(@RequestBody @Validated PersonRequestBody requestBody) {
-        var newPerson = this.personService.create(this.requestBodyToEntityConverter.convert(requestBody));
-        var responsePerson = this.entityToResponseBodyConverter.convert(this.personService.create(newPerson));
+        var newPerson = this.personService.create(this.personRequestBodyToEntityConverter.convert(requestBody));
+        var responsePerson = this.personEntityToResponseBodyConverter.convert(this.personService.create(newPerson));
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new HttpResponseResult(
                         true,
@@ -46,10 +46,10 @@ public class PersonController {
 
     @PutMapping("/{personId}")
     public ResponseEntity<HttpResponseResult> updatePerson(@PathVariable("personId") Long personId, @RequestBody @Validated PersonRequestBody requestBody) {
-        var person = this.requestBodyToEntityConverter.convert(requestBody);
+        var person = this.personRequestBodyToEntityConverter.convert(requestBody);
         var updatedPerson = this.personService.update(personId, Objects.requireNonNull(person));
 
-        var responsePerson = this.entityToResponseBodyConverter.convert(updatedPerson);
+        var responsePerson = this.personEntityToResponseBodyConverter.convert(updatedPerson);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new HttpResponseResult(
                         true,
@@ -68,7 +68,7 @@ public class PersonController {
             personList = this.personService.findAllPageable(page);
         }
 
-        var responsePerson = personList.stream().map(this.entityToResponseBodyConverter::convert).toList();
+        var responsePerson = personList.stream().map(this.personEntityToResponseBodyConverter::convert).toList();
         return ResponseEntity.status(HttpStatus.OK).body(
                 new HttpResponseResult(
                 true,
@@ -81,7 +81,7 @@ public class PersonController {
     @GetMapping("/{personId}")
     public ResponseEntity<HttpResponseResult> findOnePerson(@PathVariable("personId") Long personId) {
         var person = this.personService.findOne(personId);
-        var responsePerson = this.entityToResponseBodyConverter.convert(person);
+        var responsePerson = this.personEntityToResponseBodyConverter.convert(person);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new HttpResponseResult(
                         true,

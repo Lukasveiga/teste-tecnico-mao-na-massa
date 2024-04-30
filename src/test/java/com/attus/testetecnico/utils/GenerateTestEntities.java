@@ -15,11 +15,12 @@ public class GenerateTestEntities {
         return personTest;
     }
 
-    public static Address generateAddress(Long id, String street, String zipCode, String city, String state, boolean main, Person person) {
+    public static Address generateAddress(Long id, String street, String zipCode, int number, String city, String state, boolean main, Person person) {
         var address = new Address();
         address.setId(id);
         address.setStreet(street);
         address.setZipCode(zipCode);
+        address.setNumber(number);
         address.setCity(city);
         address.setState(state);
         address.setMain(main);

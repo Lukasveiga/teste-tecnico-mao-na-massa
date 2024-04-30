@@ -303,7 +303,7 @@ class PersonControllerTest extends ControllerTestConfiguration {
     void testFindOnePersonShowingMainAddressIfExistsSuccess() throws Exception {
         // Given
         var address = generateAddress(1L, "Street 1", "5588-966",
-                "City 1", "State 1", true, personTest);
+                5, "City 1", "State 1", true, personTest);
 
         personTest.addAddresses(address);
 

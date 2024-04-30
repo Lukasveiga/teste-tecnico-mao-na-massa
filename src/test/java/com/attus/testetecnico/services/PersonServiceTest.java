@@ -32,8 +32,6 @@ class PersonServiceTest implements ServiceTestConfiguration {
 
     Person personTest;
 
-    List<Address> addressesTest;
-
     @BeforeEach
     void setUp() {
         personTest = generatePerson(1L, "Subject 89P13", LocalDate.of(1976, 7, 1));
