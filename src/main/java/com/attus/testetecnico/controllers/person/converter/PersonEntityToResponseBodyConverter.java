@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class EntityToResponseBodyConverter implements Converter<Person, PersonResponseBody> {
+public class PersonEntityToResponseBodyConverter implements Converter<Person, PersonResponseBody> {
     @Override
     public PersonResponseBody convert(Person source) {
         var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

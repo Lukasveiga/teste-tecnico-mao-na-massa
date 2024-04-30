@@ -303,7 +303,7 @@ class PersonControllerTest extends ControllerTestConfiguration {
     void testFindOnePersonShowingMainAddressIfExistsSuccess() throws Exception {
         // Given
         var address = generateAddress(1L, "Street 1", "5588-966",
-                "City 1", "State 1", true, personTest);
+                5, "City 1", "State 1", true, personTest);
 
         personTest.addAddresses(address);
 
@@ -384,6 +384,22 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andExpect(jsonPath("$.data[0].fullName").value(personTest.getFullName()))
                 .andExpect(jsonPath("$.data[0].dateOfBirth").value(personTest.getDateOfBirth().format(formatter)))
                 .andExpect(jsonPath("$.data[0].mainAddress").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void testInternalServerError() throws Exception {
+        // Given
+        when(this.personService.findOne(anyLong()))
+                .thenThrow(new RuntimeException("Internal Server Error"));
+
+        // When - Then
+        this.mockMvc.perform(get(baseUrl + "/" + personTest.getId()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Internal Server Error"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print());
     }
 

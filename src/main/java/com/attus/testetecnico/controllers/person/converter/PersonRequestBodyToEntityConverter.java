@@ -6,7 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RequestBodyToEntityConverter implements Converter<PersonRequestBody, Person> {
+public class PersonRequestBodyToEntityConverter implements Converter<PersonRequestBody, Person> {
     @Override
     public Person convert(PersonRequestBody source) {
         var person = new Person();

@@ -1,7 +1,6 @@
 package com.attus.testetecnico.services;
 
 import com.attus.testetecnico.ServiceTestConfiguration;
-import com.attus.testetecnico.entities.Address;
 import com.attus.testetecnico.entities.Person;
 import com.attus.testetecnico.repositories.PersonRepository;
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -31,8 +29,6 @@ class PersonServiceTest implements ServiceTestConfiguration {
     PersonService personService;
 
     Person personTest;
-
-    List<Address> addressesTest;
 
     @BeforeEach
     void setUp() {
