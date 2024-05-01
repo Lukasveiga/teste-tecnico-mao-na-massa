@@ -2,6 +2,10 @@ spring:
   profiles:
     active: dev
 
+  web:
+    resources:
+      add-mappings: false
+
 api:
   endpoint:
     base-url: /api/v1
@@ -12,3 +16,9 @@ springdoc:
   swagger-ui:
     url: /openapi/main.yaml
     path: /api/v1/swagger-ui-doc
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,env
