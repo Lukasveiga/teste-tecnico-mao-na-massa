@@ -120,7 +120,7 @@ public class AddressControllerIntegrationTest extends IntegrationTestContainerCo
     }
 
     @Test
-    void testCreateNewAddressErrorErrorBadRequestInvalidFields() throws Exception {
+    void testCreateNewAddressErrorErrorBadRequest() throws Exception {
         // Given
         var errorCase = new AddressRequestBody(null, null, -1, null, null, true);
 
@@ -239,7 +239,7 @@ public class AddressControllerIntegrationTest extends IntegrationTestContainerCo
     }
 
     @Test
-    void testUpdateAddressErrorErrorBadRequestInvalidFields() throws Exception {
+    void testUpdateAddressErrorErrorBadRequest() throws Exception {
         // Given
         var errorCase = new AddressRequestBody(null, null, -1, null, null, true);
 
@@ -360,6 +360,4 @@ public class AddressControllerIntegrationTest extends IntegrationTestContainerCo
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print());
     }
-
-
 }

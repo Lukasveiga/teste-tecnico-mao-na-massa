@@ -2,7 +2,6 @@ package com.attus.testetecnico.controllers.person;
 
 import com.attus.testetecnico.ControllerTestConfiguration;
 import com.attus.testetecnico.controllers.person.dto.PersonRequestBody;
-import com.attus.testetecnico.entities.Address;
 import com.attus.testetecnico.entities.Person;
 import com.attus.testetecnico.services.PersonService;
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
@@ -47,8 +46,6 @@ class PersonControllerTest extends ControllerTestConfiguration {
 
     Person personTest;
 
-    List<Address> addressesTest;
-
     DateTimeFormatter formatter;
 
     @BeforeEach
@@ -85,33 +82,9 @@ class PersonControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
-    void testCreateNewPersonErrorBadRequestEmptyFullName() throws Exception {
+    void testCreateNewPersonErrorBadRequest() throws Exception {
         // Given
-        var request = new PersonRequestBody("",
-                personTest.getDateOfBirth());
-
-        var requestJson = this.objectMapper.writeValueAsString(request);
-
-        when(this.personService.create(any(Person.class)))
-                .thenReturn(personTest);
-
-        // When - Then
-        this.mockMvc.perform(post(baseUrl)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details"))
-                .andExpect(jsonPath("$.dateTime").isNotEmpty())
-                .andExpect(jsonPath("$.data.fullName").value("Cannot be null or empty"))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    void testCreateNewPersonErrorBadRequestEmptyDateOfBirth() throws Exception {
-        // Given
-        var request = new PersonRequestBody(personTest.getFullName(),
+        var request = new PersonRequestBody(null,
                 null);
 
         var requestJson = this.objectMapper.writeValueAsString(request);
@@ -128,6 +101,7 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details"))
                 .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data.fullName").value("Cannot be null or empty"))
                 .andExpect(jsonPath("$.data.dateOfBirth").value("Cannot be null or empty"))
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -208,33 +182,9 @@ class PersonControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
-    void testUpdatePersonErrorBadRequestEmptyFullName() throws Exception {
+    void testUpdatePersonErrorBadRequest() throws Exception {
         // Given
-        var request = new PersonRequestBody("",
-                personTest.getDateOfBirth());
-
-        var requestJson = this.objectMapper.writeValueAsString(request);
-
-        when(this.personService.update(anyLong(), any(Person.class)))
-                .thenReturn(personTest);
-
-        // When - Then
-        this.mockMvc.perform(put(baseUrl + "/" + personTest.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details"))
-                .andExpect(jsonPath("$.dateTime").isNotEmpty())
-                .andExpect(jsonPath("$.data.fullName").value("Cannot be null or empty"))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    void testUpdatePersonErrorBadRequestEmptyDateOfBirth() throws Exception {
-        // Given
-        var request = new PersonRequestBody(personTest.getFullName(),
+        var request = new PersonRequestBody(null,
                 null);
 
         var requestJson = this.objectMapper.writeValueAsString(request);
@@ -251,6 +201,7 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details"))
                 .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data.fullName").value("Cannot be null or empty"))
                 .andExpect(jsonPath("$.data.dateOfBirth").value("Cannot be null or empty"))
                 .andDo(MockMvcResultHandlers.print());
     }

@@ -24,7 +24,7 @@ public class ExceptionHandlerAdvice {
     private final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    ResponseEntity<HttpResponseResult> httpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    ResponseEntity<HttpResponseResult> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         var message = ex.getMessage();
 
         if (message.contains("java.time.LocalDate")) {
@@ -88,7 +88,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<HttpResponseResult> handleOthersExceptions(Exception ex) {
-        LOGGER.warn(ex.getLocalizedMessage());
+        LOGGER.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new HttpResponseResult(
                         false,
