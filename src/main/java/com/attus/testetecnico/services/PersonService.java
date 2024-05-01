@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class PersonService {
 
@@ -30,14 +29,6 @@ public class PersonService {
                 .orElseThrow(() -> new EntityNotFoundException("Person with id %d was not found".formatted(id)));
     }
 
-    @Transactional
-    public Person update(Long id, Person newPerson) {
-        var oldPerson = this.findOne(id);
-        oldPerson.setFullName(newPerson.getFullName());
-        oldPerson.setDateOfBirth(newPerson.getDateOfBirth());
-        return this.personRepository.save(oldPerson);
-    }
-
     public List<Person> findAll() {
         return this.personRepository.findAll();
     }
@@ -47,5 +38,13 @@ public class PersonService {
         var pageable = PageRequest.of(page, size);
         Page<Person> pagePerson = this.personRepository.findAll(pageable);
         return pagePerson.getContent();
+    }
+
+    @Transactional
+    public Person update(Long id, Person newPerson) {
+        var oldPerson = this.findOne(id);
+        oldPerson.setFullName(newPerson.getFullName());
+        oldPerson.setDateOfBirth(newPerson.getDateOfBirth());
+        return this.personRepository.save(oldPerson);
     }
 }

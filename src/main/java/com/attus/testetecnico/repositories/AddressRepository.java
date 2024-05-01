@@ -15,5 +15,4 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     @Query(value = "SELECT address.* FROM address WHERE address.person_id = ?1", nativeQuery = true)
     Page<Address> findAllByPersonId(Long personId, Pageable pageable);
-
 }

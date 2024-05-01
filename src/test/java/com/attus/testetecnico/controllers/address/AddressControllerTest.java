@@ -113,9 +113,9 @@ class AddressControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
-    void testCreateNewAddressErrorErrorBadRequestInvalidFields() throws Exception {
+    void testCreateNewAddressErrorErrorBadRequest() throws Exception {
         // Given
-        var errorCase = new AddressRequestBody("", "", -1, "", "", true);
+        var errorCase = new AddressRequestBody(null, null, -1, null, null, true);
 
         var requestJson = this.objectMapper.writeValueAsString(errorCase);
 
@@ -243,9 +243,9 @@ class AddressControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
-    void testUpdateAddressErrorErrorBadRequestInvalidFields() throws Exception {
+    void testUpdateAddressErrorBadRequest() throws Exception {
         // Given
-        var errorCase = new AddressRequestBody("", "", -1, "", "", true);
+        var errorCase = new AddressRequestBody(null, null, -1, null, null, true);
 
         var requestJson = this.objectMapper.writeValueAsString(errorCase);
 
