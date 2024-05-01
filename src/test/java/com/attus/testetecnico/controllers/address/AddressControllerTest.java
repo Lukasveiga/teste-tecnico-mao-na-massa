@@ -7,6 +7,7 @@ import com.attus.testetecnico.entities.Person;
 import com.attus.testetecnico.services.AddressService;
 import com.attus.testetecnico.services.PersonService;
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
+import com.attus.testetecnico.services.exceptions.MainAddressException;
 import com.attus.testetecnico.utils.GenerateTestEntities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -140,6 +140,30 @@ class AddressControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
+    void testCreateNewAddressErrorMainAddressException() throws Exception {
+        // Given
+        var request = new AddressRequestBody(addressTest.getStreet(), addressTest.getZipCode(), addressTest.getNumber(),
+                addressTest.getCity(), addressTest.getState(), addressTest.isMain());
+
+        var requestJson = this.objectMapper.writeValueAsString(request);
+
+        when(this.addressService.create(anyLong(), any(Address.class)))
+                .thenThrow(new MainAddressException("Person with id %d already have a main address".formatted(personTest.getId())));
+
+        // When - Then
+        this.mockMvc.perform(post(baseUrl + "/person/" + personTest.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Person with id %d already have a main address".formatted(personTest.getId())))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
     void testUpdateAddressSuccess() throws Exception {
         // Given
         var request = new AddressRequestBody(addressTest.getStreet(), addressTest.getZipCode(), addressTest.getNumber(),
@@ -246,6 +270,30 @@ class AddressControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
+    void testUpdateAddressErrorMainAddressException() throws Exception {
+        // Given
+        var request = new AddressRequestBody(addressTest.getStreet(), addressTest.getZipCode(), addressTest.getNumber(),
+                addressTest.getCity(), addressTest.getState(), addressTest.isMain());
+
+        var requestJson = this.objectMapper.writeValueAsString(request);
+
+        when(this.addressService.update(anyLong(), anyLong(), any(Address.class)))
+                .thenThrow(new MainAddressException("Person with id %d already have a main address".formatted(personTest.getId())));
+
+        // When - Then
+        this.mockMvc.perform(put(baseUrl + "/" + addressTest.getId() + "/person/" + personTest.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Person with id %d already have a main address".formatted(personTest.getId())))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
     void testFindAllAddressesSuccess() throws Exception {
         // Given
         when(this.addressService.findAll(anyLong()))
@@ -307,7 +355,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .thenReturn(addressTest);
 
         // When - Then
-        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId() + "?page=" + 0)
+        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flag").value(true))
@@ -331,7 +379,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .thenThrow(new EntityNotFoundException("Person with id %d was not found".formatted(personTest.getId())));
 
         // When - Then
-        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId() + "?page=" + 0)
+        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.flag").value(false))
@@ -348,7 +396,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .thenThrow(new EntityNotFoundException("Address with id %d was not found".formatted(addressTest.getId())));
 
         // When - Then
-        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId() + "?page=" + 0)
+        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.flag").value(false))
