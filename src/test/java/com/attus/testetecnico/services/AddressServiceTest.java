@@ -1,18 +1,17 @@
 package com.attus.testetecnico.services;
 
-
 import com.attus.testetecnico.ServiceTestConfiguration;
 import com.attus.testetecnico.entities.Address;
 import com.attus.testetecnico.entities.Person;
 import com.attus.testetecnico.repositories.AddressRepository;
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
+import com.attus.testetecnico.services.exceptions.MainAddressException;
 import com.attus.testetecnico.utils.GenerateTestEntities;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -77,6 +76,22 @@ class AddressServiceTest implements ServiceTestConfiguration {
     }
 
     @Test
+    void testCreateNewAddressErrorMainAddressAlreadyExists() {
+        // Given
+        when(this.personService.findOne(anyLong()))
+                .thenReturn(personTest);
+
+        when(this.addressRepository.findAllByPersonId(anyLong()))
+                .thenReturn(List.of(addressTest));
+
+        // When - Then
+        Assertions.assertThatThrownBy(() -> this.addressService.create(personTest.getId(), addressTest))
+                .isInstanceOf(MainAddressException.class)
+                .hasMessage("Person with id %d already have a main address".formatted(personTest.getId()));
+        verify(this.addressRepository, times(0)).save(any(Address.class));
+    }
+
+    @Test
     void testUpdateAddressSuccess() {
         // Given
         personTest.addAddresses(addressTest);
@@ -118,6 +133,28 @@ class AddressServiceTest implements ServiceTestConfiguration {
         Assertions.assertThatThrownBy(() -> this.addressService.update(personTest.getId(), addressTest.getId(), addressTest))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Address with id %d was not found".formatted(addressTest.getId()));
+        verify(this.addressRepository, times(0)).save(any(Address.class));
+    }
+
+    @Test
+    void testUpdateAddressErrorMainAddressAlreadyExists() {
+        // Given
+        var addressTestTwo = GenerateTestEntities.generateAddress(2L, "Street Test", "555-556", 5,"City Test",
+                "State Test", true, personTest);
+
+        personTest.addAddresses(addressTest);
+        personTest.addAddresses(addressTestTwo);
+
+        when(this.personService.findOne(anyLong()))
+                .thenReturn(personTest);
+
+        when(this.addressRepository.findAllByPersonId(anyLong()))
+                .thenReturn(List.of(addressTest, addressTestTwo));
+
+        // When - Then
+        Assertions.assertThatThrownBy(() -> this.addressService.update(personTest.getId(), addressTestTwo.getId(), addressTest))
+                .isInstanceOf(MainAddressException.class)
+                .hasMessage("Person with id %d already have a main address".formatted(personTest.getId()));
         verify(this.addressRepository, times(0)).save(any(Address.class));
     }
 

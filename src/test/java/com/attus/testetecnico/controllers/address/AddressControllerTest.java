@@ -7,6 +7,7 @@ import com.attus.testetecnico.entities.Person;
 import com.attus.testetecnico.services.AddressService;
 import com.attus.testetecnico.services.PersonService;
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
+import com.attus.testetecnico.services.exceptions.MainAddressException;
 import com.attus.testetecnico.utils.GenerateTestEntities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -140,6 +140,30 @@ class AddressControllerTest extends ControllerTestConfiguration {
     }
 
     @Test
+    void testCreateNewAddressErrorMainAddressException() throws Exception {
+        // Given
+        var request = new AddressRequestBody(addressTest.getStreet(), addressTest.getZipCode(), addressTest.getNumber(),
+                addressTest.getCity(), addressTest.getState(), addressTest.isMain());
+
+        var requestJson = this.objectMapper.writeValueAsString(request);
+
+        when(this.addressService.create(anyLong(), any(Address.class)))
+                .thenThrow(new MainAddressException("Person with id %d already have a main address".formatted(personTest.getId())));
+
+        // When - Then
+        this.mockMvc.perform(post(baseUrl + "/person/" + personTest.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Person with id %d already have a main address".formatted(personTest.getId())))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
     void testUpdateAddressSuccess() throws Exception {
         // Given
         var request = new AddressRequestBody(addressTest.getStreet(), addressTest.getZipCode(), addressTest.getNumber(),
@@ -242,6 +266,30 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .andExpect(jsonPath("$.data.number").value("Cannot be less than 1"))
                 .andExpect(jsonPath("$.data.city").value("Cannot be null or empty"))
                 .andExpect(jsonPath("$.data.state").value("Cannot be null or empty"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void testUpdateAddressErrorMainAddressException() throws Exception {
+        // Given
+        var request = new AddressRequestBody(addressTest.getStreet(), addressTest.getZipCode(), addressTest.getNumber(),
+                addressTest.getCity(), addressTest.getState(), addressTest.isMain());
+
+        var requestJson = this.objectMapper.writeValueAsString(request);
+
+        when(this.addressService.update(anyLong(), anyLong(), any(Address.class)))
+                .thenThrow(new MainAddressException("Address with id %d was not found".formatted(addressTest.getId())));
+
+        // When - Then
+        this.mockMvc.perform(put(baseUrl + "/" + addressTest.getId() + "/person/" + personTest.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("Address with id %d was not found".formatted(addressTest.getId())))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print());
     }
 

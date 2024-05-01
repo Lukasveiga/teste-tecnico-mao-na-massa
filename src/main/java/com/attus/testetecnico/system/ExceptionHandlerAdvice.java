@@ -1,6 +1,7 @@
 package com.attus.testetecnico.system;
 
 import com.attus.testetecnico.services.exceptions.EntityNotFoundException;
+import com.attus.testetecnico.services.exceptions.MainAddressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -64,6 +65,18 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
     ResponseEntity<HttpResponseResult> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new HttpResponseResult(
+                        false,
+                        ex.getMessage(),
+                        LocalDateTime.now(),
+                        null
+                )
+        );
+    }
+
+    @ExceptionHandler(MainAddressException.class)
+    ResponseEntity<HttpResponseResult> handleMainAddressException(MainAddressException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new HttpResponseResult(
                         false,
                         ex.getMessage(),
