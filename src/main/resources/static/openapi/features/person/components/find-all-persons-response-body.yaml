@@ -1,0 +1,30 @@
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: true
+        message:
+          type: string
+          description: Description of the request response
+          example: Find all persons success
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data:
+          type: array
+          description: All Persons information
+          example:
+              - fullName: 'Subject 89P13'
+                dateOfBirth: '01/07/1976'
+                mainAddress: null
+              - fullName: 'Subject 89P14'
+                dateOfBirth: '02/08/1976'
+                mainAddress: null
+              - fullName: 'Subject 89P15'
+                dateOfBirth: '03/09/1976'
+                mainAddress: null

@@ -1,0 +1,54 @@
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: '#/components/schemas/person'
+        - $ref: '#/components/schemas/address'
+    examples:
+      person-example:
+        value:
+          flag: false
+          message: Person with id 1 was not found
+          dateTime: '2024-05-01T11:04:22.282283191'
+          data: null
+      address-example:
+        value:
+          flag: false
+          message: Address with id 1 was not found
+          dateTime: '2024-05-01T11:04:22.282283191'
+          data: null
+
+components:
+  schemas:
+    person:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: false
+        message:
+          type: string
+          description: Description of the request response
+          example: Person with id 1 was not found
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data: null
+    address:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: false
+        message:
+          type: string
+          description: Description of the request response
+          example: Address with id 1 was not found
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data: null

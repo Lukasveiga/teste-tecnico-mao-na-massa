@@ -1,0 +1,36 @@
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        street:
+          type: string
+          description: Address street
+          example: 'Street Example'
+        zipCode:
+          type: string
+          description: Address Zip Code
+          example: '5464-322'
+        number:
+          type: integer
+          description: Address Number
+          example: 50
+        city:
+          type: string
+          description: Address City
+          example: 'City Example'
+        state:
+          type: string
+          description: Address State
+          example: 'State Example'
+        main:
+          type: boolean
+          description: If is main address of a person
+          example: true
+      required:
+        - street
+        - zipCode
+        - number
+        - city
+        - state
+        - main

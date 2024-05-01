@@ -1,0 +1,16 @@
+get:
+  summary: Get all addresses
+  parameters:
+    - name: page
+      in: query
+      description: Show five addresses information per page
+      required: false
+      schema:
+        type: integer
+
+  tags:
+    - address
+
+  responses:
+    '200':
+      $ref: './components/find-all-addresses-response-body.yaml'

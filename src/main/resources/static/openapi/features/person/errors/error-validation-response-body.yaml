@@ -1,0 +1,23 @@
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: false
+        message:
+          type: string
+          description: Description of the request response
+          example: Provided arguments are invalid, see data for details
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data:
+          type: object
+          description: Errors information
+          example:
+            fullName: 'Cannot be null or empty'
+            dateOfBirth: ['Cannot be null or empty','Invalid date format. Follow the following pattern: dd/MM/yyyy']

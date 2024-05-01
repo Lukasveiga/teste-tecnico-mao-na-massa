@@ -1,0 +1,69 @@
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: '#/components/schemas/invalid-fields'
+        - $ref: '#/components/schemas/main-address'
+    examples:
+      invalid-fields-example:
+        value:
+          flag: false
+          message: Provided arguments are invalid, see data for details
+          dateTime: '2024-05-01T11:04:22.282283191'
+          data:
+            example:
+              street: 'Cannot be null or empty'
+              zipCode: 'Cannot be null or empty'
+              number: 'Cannot be less than 1'
+              city: 'Cannot be null or empty'
+              state: 'Cannot be null or empty'
+      main-address-example:
+        value:
+          flag: false
+          message: Person with id 1 already have a main address
+          dateTime: '2024-05-01T11:04:22.282283191'
+          data: null
+
+components:
+  schemas:
+    invalid-fields:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: false
+        message:
+          type: string
+          description: Description of the request response
+          example: Provided arguments are invalid, see data for details
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data:
+          type: object
+          description: Errors information
+          example:
+            street: 'Cannot be null or empty'
+            zipCode: 'Cannot be null or empty'
+            number: 'Cannot be less than 1'
+            city: 'Cannot be null or empty'
+            state: 'Cannot be null or empty'
+    main-address:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: false
+        message:
+          type: string
+          description: Description of the request response
+          example: Person with id 1 already have a main address
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data: null
+
