@@ -10,13 +10,6 @@ api:
   endpoint:
     base-url: /api/v1
 
-springdoc:
-  api-docs:
-    path: /api/v1/api-docs
-  swagger-ui:
-    url: /openapi/main.yaml
-    path: /api/v1/swagger-ui-doc
-
 management:
   endpoints:
     web:
