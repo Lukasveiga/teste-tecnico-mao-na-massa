@@ -278,7 +278,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
         var requestJson = this.objectMapper.writeValueAsString(request);
 
         when(this.addressService.update(anyLong(), anyLong(), any(Address.class)))
-                .thenThrow(new MainAddressException("Address with id %d was not found".formatted(addressTest.getId())));
+                .thenThrow(new MainAddressException("Person with id %d already have a main address".formatted(personTest.getId())));
 
         // When - Then
         this.mockMvc.perform(put(baseUrl + "/" + addressTest.getId() + "/person/" + personTest.getId())
@@ -287,7 +287,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.message").value("Address with id %d was not found".formatted(addressTest.getId())))
+                .andExpect(jsonPath("$.message").value("Person with id %d already have a main address".formatted(personTest.getId())))
                 .andExpect(jsonPath("$.dateTime").isNotEmpty())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print());
@@ -355,7 +355,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .thenReturn(addressTest);
 
         // When - Then
-        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId() + "?page=" + 0)
+        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flag").value(true))
@@ -379,7 +379,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .thenThrow(new EntityNotFoundException("Person with id %d was not found".formatted(personTest.getId())));
 
         // When - Then
-        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId() + "?page=" + 0)
+        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.flag").value(false))
@@ -396,7 +396,7 @@ class AddressControllerTest extends ControllerTestConfiguration {
                 .thenThrow(new EntityNotFoundException("Address with id %d was not found".formatted(addressTest.getId())));
 
         // When - Then
-        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId() + "?page=" + 0)
+        this.mockMvc.perform(get(baseUrl + "/"  + addressTest.getId() + "/person/" + personTest.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.flag").value(false))

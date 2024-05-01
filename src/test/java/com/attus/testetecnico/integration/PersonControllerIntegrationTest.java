@@ -61,7 +61,7 @@ public class PersonControllerIntegrationTest extends IntegrationTestContainerCon
 
         personTestList.get(0).addAddresses(addressTest);
 
-        personRepository.saveAll(personTestList);
+        personRepository.saveAllAndFlush(personTestList);
 
         formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
@@ -271,14 +271,13 @@ public class PersonControllerIntegrationTest extends IntegrationTestContainerCon
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testFindAllPersonsSuccess() throws Exception {
         this.mockMvc.perform(get(baseUrl).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.message").value("Find all persons success"))
                 .andExpect(jsonPath("$.dateTime").isNotEmpty())
-                .andExpect(jsonPath("$.data.length()").value(6))
+                .andExpect(jsonPath("$.data.length()").value(7))
                 .andDo(MockMvcResultHandlers.print());
     }
 

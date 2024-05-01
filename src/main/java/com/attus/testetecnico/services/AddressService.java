@@ -28,7 +28,7 @@ public class AddressService {
 
         var addresses = this.findAll(personId);
 
-        if (mainAddressAlreadyExists(addresses)) {
+        if (mainAddressAlreadyExists(addresses) && address.isMain()) {
             throw new MainAddressException("Person with id %d already have a main address".formatted(personId));
         }
 
