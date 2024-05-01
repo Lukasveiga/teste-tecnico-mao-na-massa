@@ -12,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -80,6 +81,19 @@ public class ExceptionHandlerAdvice {
                 new HttpResponseResult(
                         false,
                         ex.getMessage(),
+                        LocalDateTime.now(),
+                        null
+                )
+        );
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    ResponseEntity<HttpResponseResult> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        LOGGER.info(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new HttpResponseResult(
+                        false,
+                        "API endpoint not found",
                         LocalDateTime.now(),
                         null
                 )

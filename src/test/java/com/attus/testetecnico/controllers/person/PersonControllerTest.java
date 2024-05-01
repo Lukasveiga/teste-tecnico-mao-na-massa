@@ -354,4 +354,19 @@ class PersonControllerTest extends ControllerTestConfiguration {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    void testNotFoundEndpointException() throws Exception {
+        // Given
+        var invalidUrlEndpoint = "/invalid/endpoint";
+
+        // When - Then
+        this.mockMvc.perform(get(invalidUrlEndpoint).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.message").value("API endpoint not found"))
+                .andExpect(jsonPath("$.dateTime").isNotEmpty())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }
