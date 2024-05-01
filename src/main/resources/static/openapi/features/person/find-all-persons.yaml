@@ -1,0 +1,16 @@
+get:
+  summary: Get all persons
+  parameters:
+    - name: page
+      in: query
+      description: Show five persons information per page
+      required: false
+      schema:
+        type: integer
+
+  tags:
+    - person
+
+  responses:
+    '200':
+      $ref: './components/find-all-persons-response-body.yaml'

@@ -1,0 +1,42 @@
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: true
+        message:
+          type: string
+          description: Description of the request response
+          example: Find all addresses success
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data:
+          type: array
+          description: All Addresses information
+          example:
+              - street: 'Street Example 1'
+                zipCode: '5464-322'
+                number: 50
+                city: 'City Example 1'
+                state: 'State Example 1'
+                main: true
+                personId: 1
+              - street: 'Street Example 2'
+                zipCode: '5464-323'
+                number: 51
+                city: 'City Example 2'
+                state: 'State Example 2'
+                main: false
+                personId: 1
+              - street: 'Street Example 3'
+                zipCode: '5464-324'
+                number: 52
+                city: 'City Example 3'
+                state: 'State Example 3'
+                main: false
+                personId: 1

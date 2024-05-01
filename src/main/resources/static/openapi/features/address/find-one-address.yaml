@@ -1,0 +1,23 @@
+get:
+  summary: Get one address
+  parameters:
+    - in: path
+      name: personId
+      schema:
+        type: integer
+      required: true
+      description: Numeric ID to inform which person will have the address updated
+    - in: path
+      name: addressId
+      schema:
+        type: integer
+      required: true
+      description: Numeric ID to inform which address of a person will be updated
+  tags:
+    - address
+
+  responses:
+    '200':
+      $ref: './components/find-one-address-response-body.yaml'
+    '401':
+      $ref: './errors/error-not-found-response-body.yaml'

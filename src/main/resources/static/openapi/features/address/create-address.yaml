@@ -1,0 +1,22 @@
+post:
+  summary: Create new address
+  parameters:
+    - in: path
+      name: personId
+      schema:
+        type: integer
+      required: true
+      description: Numeric ID to inform which person will be added new address
+  tags:
+    - address
+
+  requestBody:
+    $ref: './components/create-address-request-body.yaml'
+
+  responses:
+    '201':
+      $ref: './components/create-address-response-body.yaml'
+    '400':
+      $ref: './errors/error-validation-response-body.yaml'
+    '401':
+      $ref: './errors/error-person-not-found-response-body.yaml'

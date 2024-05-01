@@ -1,0 +1,28 @@
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        flag:
+          type: boolean
+          description: Indicates whether the request was made successfully
+          example: true
+        message:
+          type: string
+          description: Description of the request response
+          example: Created address success
+        dateTime:
+          type: string
+          description: Date and time of request
+          example: '2024-05-01T11:04:22.282283191'
+        data:
+          type: object
+          description: Address information
+          example:
+              street: 'Street Example'
+              zipCode: '5464-322'
+              number: 50
+              city: 'City Example'
+              state: 'State Example'
+              main: true
+              personId: 1
