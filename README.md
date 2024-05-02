@@ -33,4 +33,9 @@ Uma pessoa deve possuir os seguintes dados:
     <li>O código deve respeitar os conceitos de Design Patterns, SOLID e Clean Code;</li>
     <li>Toda a API deve ser desenvolvida no formato REST.</li>
 </ul>
+<hr>
+- Diagrama de classes:
+<div align="center">
+<img src="diagrama-de-classes.png">
+</div>
 </div>
