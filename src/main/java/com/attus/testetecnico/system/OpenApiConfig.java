@@ -20,11 +20,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
         servers = {
                 @Server(
                         description = "Dev env",
-                        url = "http://localhost:8080/api/v1"
+                        url = "http://localhost:8080"
                 ),
                 @Server(
                         description = "Prod env",
-                        url = "http://localhost:8080/api/v1"
+                        url = "https://person-management-api-1-0.onrender.com"
                 )
 
         }
