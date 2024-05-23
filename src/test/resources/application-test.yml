@@ -1,13 +1,12 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:people_management_db_test
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:hotel_system_reservation_db_test
     username: dev
     password: dev
   jpa:
-    hibernate:
-      ddl-auto: create
     open-in-view: false
     show-sql: false
-    properties:
-      hibernate.format_sql: true
-      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+
