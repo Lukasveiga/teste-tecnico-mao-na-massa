@@ -4,13 +4,13 @@ spring:
     username: dev
     password: dev
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
     open-in-view: false
     show-sql: true
     properties:
       hibernate.format_sql: true
-      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true
