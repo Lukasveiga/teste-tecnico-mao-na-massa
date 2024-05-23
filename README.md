@@ -1,4 +1,4 @@
-## 💛 Teste 03:
+## 💛 Teste:
 
 <div align="justify">
 <h3>Utilizando seus conhecimentos, desenvolva uma nova funcionalidade de gerenciamento de pessoas.
