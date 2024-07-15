@@ -102,7 +102,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<HttpResponseResult> handleOthersExceptions(Exception ex) {
-        LOGGER.warn(ex.getMessage());
+        LOGGER.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new HttpResponseResult(
                         false,

@@ -1,0 +1,6 @@
+scrape_configs:
+  - job_name: "test-tecnico-api"
+    metrics_path: "/actuator/prometheus"
+    scrape_interval: 3s # how often to scrape
+    static_configs:
+      - targets: ["test-tecnico-api:8080"]
