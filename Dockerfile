@@ -1,9 +1,9 @@
-FROM eclipse-temurin:17-alpine as builder
+FROM eclipse-temurin:17-alpine AS builder
 WORKDIR /build
 COPY . .
 RUN ./mvnw clean package -DskipTests
 
-FROM eclipse-temurin:17-jre as layer
+FROM eclipse-temurin:17-jre AS layer
 WORKDIR /layer
 ARG JAR_FILE=/build/target/*.jar
 COPY --from=builder ${JAR_FILE} application.jar

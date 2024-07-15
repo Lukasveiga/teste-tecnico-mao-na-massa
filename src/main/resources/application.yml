@@ -14,7 +14,21 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,env
+        include: health,info,env,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    env:
+      show-values: always
+
+
+springdoc:
+  api-docs:
+    path: /api/v1/api-docs
+  swagger-ui:
+    path: /api/v1/swagger-docs-ui.html
 
 server:
   port: 8080

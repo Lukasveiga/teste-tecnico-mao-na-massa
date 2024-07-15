@@ -1,5 +1,38 @@
 version: "3.8"
 services:
+  test-tecnico-api:
+    image: lukasveiga/test-tecnico-api:0.0.1
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - api_net
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - api_net
+
+  grafana:
+    image: grafana/grafana-enterprise
+    volumes:
+      - ./docker/grafana:/var/lib/grafana
+    env_file:
+      - ./docker/grafana/grafana-config.env
+    ports:
+      - "3000:3000"
+    user: "$UID:$GID"
+    networks:
+      - api_net
+
   database:
     image: postgres:14-alpine
     container_name: dev-postgresql
@@ -15,3 +48,9 @@ services:
       interval: 3s
       timeout: 5s
       retries: 5
+    networks:
+      - api_net
+
+networks:
+  api_net:
+    driver: bridge
