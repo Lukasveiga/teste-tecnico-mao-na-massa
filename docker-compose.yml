@@ -1,7 +1,15 @@
 version: "3.8"
 services:
   test-tecnico-api:
-    image: lukasveiga/test-tecnico-api:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: database
+      DB_NAME: ${DB_NAME}
+      DB_PORT: 5432
     ports:
       - "8080:8080"
     depends_on:

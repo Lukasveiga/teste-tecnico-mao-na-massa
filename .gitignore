@@ -33,3 +33,10 @@ build/
 .vscode/
 
 .env
+
+# Grafana files
+/docker/grafana/csv
+/docker/grafana/pdf
+/docker/grafana/plugins
+/docker/grafana/png
+/docker/grafana/grafana.db

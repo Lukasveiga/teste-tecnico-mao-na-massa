@@ -12,7 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -87,8 +87,8 @@ public class ExceptionHandlerAdvice {
         );
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    ResponseEntity<HttpResponseResult> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+    @ExceptionHandler(NoResourceFoundException.class)
+    ResponseEntity<HttpResponseResult> handleNoResourceFoundException(NoResourceFoundException ex) {
         LOGGER.info(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new HttpResponseResult(
